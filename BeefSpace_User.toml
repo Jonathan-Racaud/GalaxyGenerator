@@ -33,7 +33,6 @@ TabWidth = 118.0
 TabIsPinned = false
 Type = "ProjectPanel"
 ScrollPos = 0.0
-OpenFolders = ["PI:raylib-beef"]
 
 [[MainDockingFrame.DockedWidgets.DockedWidgets]]
 IsFillWidget = true
@@ -51,8 +50,7 @@ TabWidth = 98.0
 TabIsPinned = false
 Type = "SourceViewPanel"
 FilePath = "src/Program.bf"
-CursorPos = 4910
-VertPos = 2587.5
+CursorPos = 536
 ProjectName = "GalaxyGenerator"
 
 [[MainDockingFrame.DockedWidgets]]
