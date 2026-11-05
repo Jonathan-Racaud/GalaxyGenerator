@@ -1,0 +1,134 @@
+FileVersion = 1
+LastConfig = "Debug"
+LastPlatform = "Linux64"
+RecentFilesList = ["src/Program.bf"]
+
+[MainWindow]
+X = 0
+Y = 0
+Width = 1264
+Height = 1321
+ShowKind = "ShowNormal"
+
+[MainDockingFrame]
+Type = "DockingFrame"
+SplitType = 2
+
+[[MainDockingFrame.DockedWidgets]]
+RequestedWidth = 350.0
+RequestedHeight = 200.0
+SizePriority = 200.0
+Type = "DockingFrame"
+SplitType = 1
+
+[[MainDockingFrame.DockedWidgets.DockedWidgets]]
+RequestedWidth = 206.0
+RequestedHeight = 200.0
+Type = "TabbedView"
+
+[[MainDockingFrame.DockedWidgets.DockedWidgets.Tabs]]
+Active = true
+TabLabel = "Workspace"
+TabWidth = 118.0
+TabIsPinned = false
+Type = "ProjectPanel"
+ScrollPos = 0.0
+OpenFolders = ["PI:raylib-beef"]
+
+[[MainDockingFrame.DockedWidgets.DockedWidgets]]
+IsFillWidget = true
+Permanent = true
+RequestedWidth = 150.0
+RequestedHeight = 1072.0
+SizePriority = 150.0
+DefaultDocumentsTabbedView = true
+Type = "TabbedView"
+
+[[MainDockingFrame.DockedWidgets.DockedWidgets.Tabs]]
+Active = true
+TabLabel = "Program.bf"
+TabWidth = 98.0
+TabIsPinned = false
+Type = "SourceViewPanel"
+FilePath = "src/Program.bf"
+CursorPos = 4910
+VertPos = 2587.5
+ProjectName = "GalaxyGenerator"
+
+[[MainDockingFrame.DockedWidgets]]
+RequestedWidth = 250.0
+RequestedHeight = 250.0
+Type = "DockingFrame"
+SplitType = 1
+
+[[MainDockingFrame.DockedWidgets.DockedWidgets]]
+RequestedWidth = 250.0
+RequestedHeight = 250.0
+SizePriority = 0.5
+Type = "TabbedView"
+
+[[MainDockingFrame.DockedWidgets.DockedWidgets.Tabs]]
+TabLabel = "Memory"
+TabWidth = 100.0
+TabIsPinned = false
+Type = "MemoryPanel"
+AutoResize = "Auto_Mul8"
+RequestedWidth = 300.0
+
+[[MainDockingFrame.DockedWidgets.DockedWidgets.Tabs]]
+TabLabel = "Watch"
+TabWidth = 87.0
+TabIsPinned = false
+Type = "WatchPanel"
+Columns = [{Width = 200.0}, {Width = 200.0}, {Width = 200.0}]
+
+[[MainDockingFrame.DockedWidgets.DockedWidgets.Tabs]]
+Active = true
+TabLabel = "Auto"
+TabWidth = 78.0
+TabIsPinned = false
+Type = "AutoWatchPanel"
+Columns = [{Width = 200.0}, {Width = 200.0}, {Width = 200.0}]
+
+[[MainDockingFrame.DockedWidgets.DockedWidgets]]
+RequestedWidth = 250.0
+RequestedHeight = 250.0
+SizePriority = 0.5
+Type = "TabbedView"
+
+[[MainDockingFrame.DockedWidgets.DockedWidgets.Tabs]]
+TabLabel = "Threads"
+TabWidth = 102.0
+TabIsPinned = false
+Type = "ThreadPanel"
+
+[[MainDockingFrame.DockedWidgets.DockedWidgets.Tabs]]
+TabLabel = "Call Stack"
+TabWidth = 106.0
+TabIsPinned = false
+Type = "CallStackPanel"
+
+[[MainDockingFrame.DockedWidgets.DockedWidgets.Tabs]]
+TabLabel = "Immediate"
+TabWidth = 115.0
+TabIsPinned = false
+Type = "ImmediatePanel"
+
+[[MainDockingFrame.DockedWidgets.DockedWidgets.Tabs]]
+Active = true
+TabLabel = "Output"
+TabWidth = 92.0
+TabIsPinned = false
+Type = "OutputPanel"
+
+[[BookmarkFolders]]
+Title = ""
+
+[OutputFilters]
+ModuleLoadMessages = false
+ModuleUnloadMessages = false
+ProcessExitMessages = false
+ThreadCreateMessages = false
+ThreadExitMessages = false
+SymbolLoadMessages = false
+ProgramOutput = false

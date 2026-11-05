@@ -1,0 +1,11 @@
+FileVersion = 1
+
+[Workspace]
+StartupProject = "GalaxyGenerator"
+
+[Projects]
+GalaxyGenerator = {Path = "."}
+raylib-beef = {Path = "libs/raylib-beef/raylib-beef"}
+
+[Configs.Debug.Linux64]
+AllowHotSwapping = true
