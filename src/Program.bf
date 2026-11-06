@@ -30,9 +30,10 @@ enum GaussianGenerator
 
 class RingGalaxyGenerator
 {
-	public int StarCount { get => stars?.Count ?? 0; };
+	public int StarCount { get => stars?.Count ?? 0; }
 
 	List<Star> stars = new .() ~ delete _;
+	public List<Star> Stars { get => stars; }
 
 	public void Generate(GalaxyCenterConfig coreConfig, GalaxyCenterConfig centerConfig, params GalaxyRingConfig[] ringsConfig)
 	{
@@ -85,7 +86,6 @@ class RingGalaxyGenerator
 			deviation * GenerateGaussian()
 		);
 		let color = WHITE;
-
 
 		stars.Add(.(position, color));
 	}
@@ -169,6 +169,16 @@ class RingGalaxyGenerator
 			}
 		}
 	}
+}
+
+class GalaxyRenderer
+{
+	List<Star> stars = new .() ~ delete _;
+
+	public this(List<Star> stars)
+	{
+		this.stars.AddRange(stars);
+	}
 
 	public void Render()
 	{
@@ -184,7 +194,6 @@ class Program
 	public static int Main(String[] args)
 	{
 		InitWindow(1024, 768, scope $"Galaxy Generator");
-		DisableCursor();
 		SetTargetFPS(60);
 
 		let generator = scope RingGalaxyGenerator();
@@ -214,6 +223,8 @@ class Program
 			ring
 		);
 
+		let renderer = scope GalaxyRenderer(generator.Stars);
+
 		var camera = Camera3D(
 			.(2000,0,2000), // Position
 			.(0,0,0), // Target
@@ -232,7 +243,7 @@ class Program
 			rlSetClipPlanes(0.1f, 5000.f);
 			BeginMode3D(camera);
 
-			generator.Render();
+			renderer.Render();
 
 			EndMode3D();
 
