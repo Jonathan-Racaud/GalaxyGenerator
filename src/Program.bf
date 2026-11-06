@@ -39,10 +39,18 @@ enum GaussianGenerator
 	case Spheric(float deviation);
 }
 
+enum GalaxyType
+{
+	case Ring(List<Star> stars);
+	case Spiral(List<Star> stars);
+}
+
 abstract class GalaxyGenerator
 {
 	protected GalaxyCenterConfig coreConfig;
 	protected GalaxyCenterConfig centerConfig;
+
+	protected Random random = new .() ~ delete _;
 
 	public this(GalaxyCenterConfig coreConfig, GalaxyCenterConfig centerConfig)
 	{
@@ -52,7 +60,7 @@ abstract class GalaxyGenerator
 
 	public abstract void Generate(out List<Star> stars);
 
-	public void GenerateCenter(ref List<Star> stars, GalaxyCenterConfig config)
+	protected void GenerateCenter(ref List<Star> stars, GalaxyCenterConfig config)
 	{
 		for (let i in 0...config.NumberOfStars)
 		{
@@ -70,8 +78,8 @@ abstract class GalaxyGenerator
 
 	protected float GenerateGaussian()
 	{
-		let u1 = (float)GetRandomValue(1, 10000) / 10000.f;
-		let u2 = (float)GetRandomValue(0, 10000) / 10000.f;
+		let u1 = random.NextFloat();
+		let u2 = random.NextFloat();
 
 		return Math.Sqrt(-2.f * Math.Log(u1)) * Math.Cos(2.f * PI * u2);
 	}
@@ -132,7 +140,7 @@ class RingGalaxyGenerator: GalaxyGenerator
 		{
 			for (let i in 0...ring.NumberOfStars)
 			{
-				let theta = (float)GetRandomValue(0, 360) * DEG2RAD;
+				let theta = (float)random.Next(0, 360) * DEG2RAD;
 				let r = GenerateGaussianRadius(ring.Radius, ring.Thickness, ring.RadialSpread);
 
 				let radialOffset = Math.Abs(r - ring.Radius);
@@ -141,7 +149,7 @@ class RingGalaxyGenerator: GalaxyGenerator
 				let heightFactor = 1.f - normalizedOffset;
 				let maxHeight = ring.Height * heightFactor;
 
-				let h = (float)GetRandomValue(
+				let h = (float)random.Next(
 					(int32)(-maxHeight * 100),
 					((int32)maxHeight * 100)
 				) / 100.f;
@@ -165,10 +173,7 @@ class RingGalaxyGenerator: GalaxyGenerator
 
 		while (true)
 		{
-			let u1 = (float)GetRandomValue(1, 10000) / 10000.f;
-			let u2 = (float)GetRandomValue(0, 10000) / 10000.f;
-
-			let z = Math.Sqrt(-2.f * Math.Log(u1)) * Math.Cos(2.f * PI * u2);
+			let z = GenerateGaussian();
 			let sigma = thickness * radialSpread;
 			let r = radius + sigma * z;
 
@@ -330,7 +335,7 @@ class Program
 
 		let galaxyRenderer = scope GalaxyRenderer();
 
-		var selectedStars = ringStars;
+		var selectedStars = GalaxyType.Ring(ringStars);
 
 		var camera = Camera3D(
 			.(2000,0,2000), // Position
@@ -346,11 +351,29 @@ class Program
 
 			if (IsKeyPressed(.KEY_R))
 			{
-				selectedStars = ringStars;
+				selectedStars = .Ring(ringStars);
 			}
 			else if (IsKeyPressed(.KEY_S))
 			{
-				selectedStars = spiralStars;
+				selectedStars = .Spiral(spiralStars);
+			}
+
+			if (IsKeyPressed(.KEY_G))
+			{
+				DeleteAndNullify!(ringStars);
+				DeleteAndNullify!(spiralStars);
+
+				ringGalaxyGenerator.Generate(out ringStars);
+				spiralGalaxyGenerator.Generate(out spiralStars);
+
+				if (selectedStars case .Ring)
+				{
+					selectedStars = .Ring(ringStars);
+				}
+				else
+				{
+					selectedStars = .Spiral(spiralStars);
+				}
 			}
 
 			BeginDrawing();
@@ -359,11 +382,20 @@ class Program
 			rlSetClipPlanes(0.1f, 5000.f);
 			BeginMode3D(camera);
 
-			galaxyRenderer.Render(selectedStars);
+			var starCount = 0;
+			switch (selectedStars)
+			{
+			case .Ring(let stars):
+				galaxyRenderer.Render(stars);
+				starCount = stars.Count;
+			case .Spiral(let stars):
+				galaxyRenderer.Render(stars);
+				starCount = stars.Count;
+			}
 
 			EndMode3D();
 
-			DrawText(scope $"Stars: {selectedStars.Count}", 20, 20, 32, RAYWHITE);
+			DrawText(scope $"Stars: {starCount}", 20, 20, 32, RAYWHITE);
 
 			EndDrawing();
 		}

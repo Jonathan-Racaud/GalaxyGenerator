@@ -1,12 +1,12 @@
 FileVersion = 1
 LastConfig = "Debug"
 LastPlatform = "Linux64"
-RecentFilesList = ["src/Program.bf"]
+RecentFilesList = ["src/Program.bf", "/home/vendinois/.local/share/beef/BeefLibs/corlib/src/Random.bf"]
 
 [MainWindow]
 X = 0
 Y = 0
-Width = 1264
+Width = 1520
 Height = 1321
 ShowKind = "ShowNormal"
 
@@ -50,7 +50,8 @@ TabWidth = 98.0
 TabIsPinned = false
 Type = "SourceViewPanel"
 FilePath = "src/Program.bf"
-CursorPos = 536
+CursorPos = 9115
+VertPos = 5203.125
 ProjectName = "GalaxyGenerator"
 
 [[MainDockingFrame.DockedWidgets]]
