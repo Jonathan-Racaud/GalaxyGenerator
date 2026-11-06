@@ -20,6 +20,17 @@ struct GalaxyRingConfig: this(
 	float RadialSpread
 );
 
+struct GalaxyArmConfig: this(
+	int NumberOfStars,
+	int ArmCount,
+	float StartRadius,
+	float Growth,
+	float Turns,
+	float Width,
+	float Spread,
+	float Height
+);
+
 struct Star: this(Vector3 Position, Color Color);
 
 enum GaussianGenerator
@@ -28,57 +39,44 @@ enum GaussianGenerator
 	case Spheric(float deviation);
 }
 
-class RingGalaxyGenerator
+abstract class GalaxyGenerator
 {
-	public int StarCount { get => stars?.Count ?? 0; }
+	protected GalaxyCenterConfig coreConfig;
+	protected GalaxyCenterConfig centerConfig;
 
-	List<Star> stars = new .() ~ delete _;
-	public List<Star> Stars { get => stars; }
-
-	public void Generate(GalaxyCenterConfig coreConfig, GalaxyCenterConfig centerConfig, params GalaxyRingConfig[] ringsConfig)
+	public this(GalaxyCenterConfig coreConfig, GalaxyCenterConfig centerConfig)
 	{
-		stars.Clear();
-		GenerateCenter(coreConfig);
-		GenerateCenter(centerConfig);
-		GenerateRings(ringsConfig);
+		this.coreConfig = coreConfig;
+		this.centerConfig = centerConfig;
 	}
 
-	private void GenerateCenter(GalaxyCenterConfig config)
+	public abstract void Generate(out List<Star> stars);
+
+	public void GenerateCenter(ref List<Star> stars, GalaxyCenterConfig config)
 	{
 		for (let i in 0...config.NumberOfStars)
 		{
 			switch (config.Generator)
 			{
 			case .Elliptic(let radii, let deviation, let flattening):
-				GenerateEllipticalDistribution(radii, deviation, flattening);
+				GenerateEllipticalDistribution(ref stars, radii, deviation, flattening);
 			case .Spheric(let deviation):
-				GenerateSphericalDistribution(deviation);
+				GenerateSphericalDistribution(ref stars, deviation);
 			default:
 				break;
 			}
 		}
 	}
 
-	/*private void GenerateSphereCenter(radius)
+	protected float GenerateGaussian()
 	{
-		// NOTE: this can maybe used to place points that act as moon around a planet which would be their center.
-		let r = (float)GetRandomValue(0, (int32)radius * 100) / 100.f;
-		var theta = (float)GetRandomValue(0, 18000) / 100.f;
-		var phi = (float)GetRandomValue(0, 36000) / 100.f;
+		let u1 = (float)GetRandomValue(1, 10000) / 10000.f;
+		let u2 = (float)GetRandomValue(0, 10000) / 10000.f;
 
-		theta *= DEG2RAD;
-		phi *= DEG2RAD;
+		return Math.Sqrt(-2.f * Math.Log(u1)) * Math.Cos(2.f * PI * u2);
+	}
 
-		stars.Add(
-			.(
-				r * Math.Sin(theta) * Math.Cos(phi),
-				r * Math.Sin(theta) * Math.Sin(phi),
-				r * Math.Cos(theta)
-			)
-		);
-	}*/
-
-	private void GenerateSphericalDistribution(float deviation)
+	private void GenerateSphericalDistribution(ref List<Star> stars, float deviation)
 	{
 		let position = Vector3(
 			deviation * GenerateGaussian(),
@@ -90,7 +88,7 @@ class RingGalaxyGenerator
 		stars.Add(.(position, color));
 	}
 
-	private void GenerateEllipticalDistribution(Vector3 radii, Vector3 deviation, Vector3 flattening)
+	private void GenerateEllipticalDistribution(ref List<Star> stars, Vector3 radii, Vector3 deviation, Vector3 flattening)
 	{
 		let x = GenerateGaussian() * deviation.x * flattening.x;
 		let y = GenerateGaussian() * deviation.y * flattening.y;
@@ -108,10 +106,29 @@ class RingGalaxyGenerator
 			stars.Add(.(position, color));
 		}
 	}
+}
 
-	private void GenerateRings(GalaxyRingConfig[] config)
+class RingGalaxyGenerator: GalaxyGenerator
+{
+	List<GalaxyRingConfig> ringsConfig = new .() ~ delete _;
+
+	public this(GalaxyCenterConfig coreConfig, GalaxyCenterConfig centerConfig, params GalaxyRingConfig[] ringsConfig) : base(coreConfig, centerConfig)
 	{
-		for (let ring in config)
+		this.ringsConfig.AddRange(ringsConfig);
+	}
+
+	public override void Generate(out List<Star> stars)
+	{
+		stars = new .();
+
+		GenerateCenter(ref stars, coreConfig);
+		GenerateCenter(ref stars, centerConfig);
+		GenerateRings(ref stars);
+	}
+
+	private void GenerateRings(ref List<Star> stars)
+	{
+		for (let ring in ringsConfig)
 		{
 			for (let i in 0...ring.NumberOfStars)
 			{
@@ -141,14 +158,6 @@ class RingGalaxyGenerator
 		}
 	}
 
-	private float GenerateGaussian()
-	{
-		let u1 = (float)GetRandomValue(1, 10000) / 10000.f;
-		let u2 = (float)GetRandomValue(0, 10000) / 10000.f;
-	
-		return Math.Sqrt(-2.f * Math.Log(u1)) * Math.Cos(2.f * PI * u2);
-	}	
-
 	private float GenerateGaussianRadius(float radius, float thickness, float radialSpread)
 	{
 		let innerRadius = radius - (thickness / 2);
@@ -171,16 +180,94 @@ class RingGalaxyGenerator
 	}
 }
 
-class GalaxyRenderer
+class SpiralGalaxyGenerator: GalaxyGenerator
 {
-	List<Star> stars = new .() ~ delete _;
+	GalaxyArmConfig armsConfig;
 
-	public this(List<Star> stars)
+	public this(GalaxyCenterConfig coreConfig, GalaxyCenterConfig centerConfig, GalaxyArmConfig armsConfig) : base(coreConfig, centerConfig)
 	{
-		this.stars.AddRange(stars);
+		this.armsConfig = armsConfig;
 	}
 
-	public void Render()
+	public override void Generate(out List<Star> stars)
+	{
+		stars = new .();
+
+		GenerateCenter(ref stars, coreConfig);
+		GenerateCenter(ref stars, centerConfig);
+		GenerateArms(ref stars);
+	}
+
+	private void GenerateArms(ref List<Star> stars)
+	{
+		if (armsConfig.ArmCount <= 0 || armsConfig.NumberOfStars <= 0)
+		{
+			return;
+		}
+
+		let maxAngle = armsConfig.Turns * 2.f * PI;
+		let sigma = armsConfig.Width * armsConfig.Spread;
+
+		for (let i in 0...armsConfig.NumberOfStars)
+		{
+			// Distribute the stars evenly between the different arms.
+			let armIndex = i % armsConfig.ArmCount;
+
+			// Rotate each arm around the galaxy centre.
+			let armOffset = (2.f * PI * armIndex) / armsConfig.ArmCount;
+
+			// Random position along the spiral.
+			let randomAngle = (float)GetRandomValue(0, 10000) / 10000.f;
+			let theta = randomAngle * maxAngle;
+
+			// Logarithmic spiral
+			let radius = armsConfig.StartRadius * Math.Exp(armsConfig.Growth * theta);
+
+			// Actual angle, including the arm's rotation.
+			let angle = theta + armOffset;
+
+			// Position on the ideal spiral curve.
+			let centerX = radius * Math.Cos(angle);
+			let centerY = radius * Math.Sin(angle);
+
+			// Calculate the tangent to the spiral.
+			let dr = armsConfig.Growth * radius;
+
+			let tangentX = dr * Math.Cos(angle) - radius * Math.Sin(angle);
+			let tangentY = dr * Math.Sin(angle) + radius * Math.Cos(angle);
+
+			let tangentLength = Math.Sqrt(tangentX * tangentX + tangentY * tangentY);
+
+			// Perpendicular direction (normal).
+			let normalX = -tangentX / tangentLength;
+			let normalY = tangentX / tangentLength;
+
+			// Gaussian displacement perpendicular to the spiral.
+			let offset = GenerateGaussian() * sigma;
+
+			// Reject points outside the maximum arm width.
+			if (Math.Abs(offset) > armsConfig.Width / 2.f)
+			{
+				continue;
+			}
+
+			let x = centerX + normalX * offset;
+			let y = centerY + normalY * offset;
+
+			// Gaussian vertical distribution.
+			let z = GenerateGaussian() * armsConfig.Height;
+
+			let position = Vector3(x, y, z);
+			let color = GREEN;
+
+			stars.Add(.(position, color));
+		}
+	}
+}
+
+class GalaxyRenderer
+{
+	public void Render(List<Star> stars)
 	{
 		for (let star in stars)
 		{
@@ -196,11 +283,11 @@ class Program
 		InitWindow(1024, 768, scope $"Galaxy Generator");
 		SetTargetFPS(60);
 
-		let generator = scope RingGalaxyGenerator();
 		let core = GalaxyCenterConfig(
 			1000,
 			.Spheric(deviation: 50)
 		);
+
 		let center = GalaxyCenterConfig(
 			500,
 			.Elliptic(
@@ -209,6 +296,7 @@ class Program
 				flattening: .(1f, 0.5f, 0.2f)
 			)
 		);
+
 		let ring = GalaxyRingConfig(
 			NumberOfStars: 2000,
 			Radius: 700,
@@ -217,13 +305,32 @@ class Program
 			RadialSpread: 0.5f
 		);
 
-		generator.Generate(
-			core,
-			center,
-			ring
+		let arm = GalaxyArmConfig(
+			NumberOfStars: 1000,
+			ArmCount: 2,
+			StartRadius: 120,
+			Growth: 0.12f,
+			Turns: 2,
+			Width: 80,
+			Spread: 0.15f,
+			Height: 12
 		);
 
-		let renderer = scope GalaxyRenderer(generator.Stars);
+		let ringGalaxyGenerator = scope RingGalaxyGenerator(core, center, ring);
+		let spiralGalaxyGenerator = scope SpiralGalaxyGenerator(core, center, arm);
+
+		List<Star> ringStars;
+		defer { delete ringStars; }
+
+		List<Star> spiralStars;
+		defer { delete spiralStars; }
+
+		ringGalaxyGenerator.Generate(out ringStars);
+		spiralGalaxyGenerator.Generate(out spiralStars);
+
+		let galaxyRenderer = scope GalaxyRenderer();
+
+		var selectedStars = ringStars;
 
 		var camera = Camera3D(
 			.(2000,0,2000), // Position
@@ -237,17 +344,26 @@ class Program
 		{
 			UpdateCamera(&camera, .CAMERA_ORBITAL);
 
+			if (IsKeyPressed(.KEY_R))
+			{
+				selectedStars = ringStars;
+			}
+			else if (IsKeyPressed(.KEY_S))
+			{
+				selectedStars = spiralStars;
+			}
+
 			BeginDrawing();
 			ClearBackground(BLACK);
 
 			rlSetClipPlanes(0.1f, 5000.f);
 			BeginMode3D(camera);
 
-			renderer.Render();
+			galaxyRenderer.Render(selectedStars);
 
 			EndMode3D();
 
-			DrawText(scope $"Stars: {generator.StarCount}", 20, 20, 32, RAYWHITE);
+			DrawText(scope $"Stars: {selectedStars.Count}", 20, 20, 32, RAYWHITE);
 
 			EndDrawing();
 		}
