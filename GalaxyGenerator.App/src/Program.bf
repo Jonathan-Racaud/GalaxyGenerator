@@ -115,20 +115,20 @@ class Program
 		);
 
 		let ring = GalaxyRingConfig(
-			NumberOfStars: 2000,
+			NumberOfStars: 1000,
 			Radius: 700,
-			Thickness: 300,
-			Height: 70,
-			RadialSpread: 0.5f
+			Thickness: 200,
+			Height: 80,
+			RadialSpread: 20f
 		);
 
 		let arm = GalaxyArmsConfig(
 			NumberOfStars: 1000,
 			ArmCount: 2,
 			StartRadius: 120,
-			Growth: 0.12f,
+			Growth: 0.3f,
 			Turns: 2,
-			Width: 80,
+			Width: 100,
 			Spread: 0.15f,
 			Height: 12
 		);
