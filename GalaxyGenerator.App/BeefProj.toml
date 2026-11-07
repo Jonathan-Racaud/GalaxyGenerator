@@ -1,8 +1,9 @@
 FileVersion = 1
 
 [Project]
-Name = "GalaxyGenerator"
+Name = "GalaxyGenerator.App"
 StartupObject = "GalaxyGenerator.Program"
+DefaultNamespace = "GalaxyGenerator"
 
 [Dependencies]
 corlib = "*"

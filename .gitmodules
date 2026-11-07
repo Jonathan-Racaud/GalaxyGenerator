@@ -1,3 +1,3 @@
-[submodule "libs/raylib-beef"]
-	path = libs/raylib-beef
+[submodule "GalaxyGenerator.App/libs/raylib-beef"]
+	path = GalaxyGenerator.App/libs/raylib-beef
 	url = https://github.com/Starpelly/raylib-beef.git

@@ -1,7 +1,7 @@
 FileVersion = 1
 LastConfig = "Debug"
 LastPlatform = "Win64"
-RecentFilesList = ["src\\Program.bf", "GalaxyGenerator.Core\\src\\GalaxyGenerator.bf", "libs\\raylib-beef\\raylib-beef\\src\\Raylib.bf", "GalaxyGenerator.Core\\src\\GalaxyConfiguration.bf", "C:\\home\\vendinois\\.local\\share\\beef\\BeefLibs\\corlib\\src\\Random.bf"]
+RecentFilesList = ["GalaxyGenerator.Core\\src\\GalaxyConfiguration.bf", "GalaxyGenerator.Core\\src\\GalaxyGenerator.bf", "src\\Program.bf", "C:\\home\\vendinois\\.local\\share\\beef\\BeefLibs\\corlib\\src\\Random.bf"]
 
 [MainWindow]
 X = 610
@@ -33,7 +33,6 @@ TabWidth = 115.0
 TabIsPinned = false
 Type = "ProjectPanel"
 ScrollPos = 0.0
-OpenFolders = ["PI:GalaxyGenerator", "PI:GalaxyGenerator.Core"]
 
 [[MainDockingFrame.DockedWidgets.DockedWidgets]]
 IsFillWidget = true
@@ -45,12 +44,14 @@ DefaultDocumentsTabbedView = true
 Type = "TabbedView"
 
 [[MainDockingFrame.DockedWidgets.DockedWidgets.Tabs]]
+Active = true
 TabLabel = "GalaxyConfiguration.bf"
 TabWidth = 172.0
 TabIsPinned = false
 Type = "SourceViewPanel"
 FilePath = "GalaxyGenerator.Core\\src\\GalaxyConfiguration.bf"
-CursorPos = 60
+CursorPos = 564
+VertPos = 45.0
 ProjectName = "GalaxyGenerator.Core"
 
 [[MainDockingFrame.DockedWidgets.DockedWidgets.Tabs]]
@@ -59,19 +60,18 @@ TabWidth = 151.0
 TabIsPinned = false
 Type = "SourceViewPanel"
 FilePath = "GalaxyGenerator.Core\\src\\GalaxyGenerator.bf"
-CursorPos = 6747
-VertPos = 1484.0
+CursorPos = 7010
+VertPos = 3195.0
 ProjectName = "GalaxyGenerator.Core"
 
 [[MainDockingFrame.DockedWidgets.DockedWidgets.Tabs]]
-Active = true
 TabLabel = "Program.bf"
 TabWidth = 96.0
 TabIsPinned = false
 Type = "SourceViewPanel"
 FilePath = "src\\Program.bf"
-CursorPos = 473
-ProjectName = "GalaxyGenerator"
+CursorPos = 383
+ProjectName = "GalaxyGenerator.App"
 
 [[MainDockingFrame.DockedWidgets]]
 RequestedWidth = 250.0

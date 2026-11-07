@@ -1,10 +1,10 @@
 FileVersion = 1
 
 [Workspace]
-StartupProject = "GalaxyGenerator"
+StartupProject = "GalaxyGenerator.App"
 
 [Projects]
-GalaxyGenerator = {Path = "."}
+"GalaxyGenerator.App" = {Path = "."}
 raylib-beef = {Path = "libs/raylib-beef/raylib-beef"}
 "GalaxyGenerator.Core" = {Path = "GalaxyGenerator.Core"}
 
