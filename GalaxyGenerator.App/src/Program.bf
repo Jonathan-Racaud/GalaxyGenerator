@@ -135,12 +135,16 @@ class Program
 
 	protected static void Render()
 	{
+		DrawText("Inputs:", 20, 20, 32, RAYWHITE);
+		DrawText("	R: Generate a ring galaxy", 40, 40, 32, RAYWHITE);
+		DrawText("	S: Generate a spiral galaxy", 40, 60, 32, RAYWHITE);
+
 		if (stars == null)
 		{
 			return;
 		}
 
-		DrawText(scope $"Stars: {stars.Count}", 20, 20, 32, RAYWHITE);
+		DrawText(scope $"Stars: {stars.Count}", 20, 120, 32, RAYWHITE);
 
 		for (let star in stars)
 		{
