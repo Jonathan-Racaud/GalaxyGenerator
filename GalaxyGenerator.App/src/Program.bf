@@ -13,6 +13,7 @@ class App
 {
 	public delegate void() Update ~ delete _;
 	public delegate void() Render ~ delete _;
+	public function void() UI;
 
 	public Camera3D Camera;
 
@@ -49,14 +50,27 @@ class App
 			Render();
 
 			EndMode3D();
+
+			UI();
 			EndDrawing();
 		}
 	}
 }
 
+static
+{
+	public static void ShowUI()
+	{
+		DrawText("Inputs:", 20, 20, 32, RAYWHITE);
+		DrawText("	R: Generate a ring galaxy", 40, 60, 32, RAYWHITE);
+		DrawText("	S: Generate a spiral galaxy", 40, 100, 32, RAYWHITE);
+		DrawText(scope $"Stars: {Program.Stars?.Count ?? 0}", 20, 160, 32, RAYWHITE);
+	}
+}
+
 class Program
 {
-	private static List<Star> stars = null ~ delete _;
+	public static List<Star> Stars = null ~ delete _;
 
 	public static int Main(String[] args)
 	{
@@ -76,6 +90,8 @@ class Program
 		};
 
 		app.Render = new => Render;
+
+		app.UI = => ShowUI;
 
 		app.Run();
 
@@ -128,25 +144,19 @@ class Program
 		}
 		defer { delete generator; }
 
-		SafeDeleteAndNullify!(stars);
+		SafeDeleteAndNullify!(Stars);
 
-		generator.Generate(out stars);
+		generator.Generate(out Stars);
 	}
 
 	protected static void Render()
 	{
-		DrawText("Inputs:", 20, 20, 32, RAYWHITE);
-		DrawText("	R: Generate a ring galaxy", 40, 40, 32, RAYWHITE);
-		DrawText("	S: Generate a spiral galaxy", 40, 60, 32, RAYWHITE);
-
-		if (stars == null)
+		if (Stars == null)
 		{
 			return;
 		}
 
-		DrawText(scope $"Stars: {stars.Count}", 20, 120, 32, RAYWHITE);
-
-		for (let star in stars)
+		for (let star in Stars)
 		{
 			DrawSphere(
 				.(star.Position.X, star.Position.Y, star.Position.Z),
