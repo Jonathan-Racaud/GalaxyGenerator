@@ -2,10 +2,10 @@ FileVersion = 1
 
 [Project]
 Name = "GalaxyGenerator.App"
-StartupObject = "GalaxyGenerator.Program"
-DefaultNamespace = "GalaxyGenerator"
+StartupObject = "GalaxyGenerator.App.Program"
 
 [Dependencies]
 corlib = "*"
 raylib-beef = "*"
 "GalaxyGenerator.Core" = "*"
+corlib = "*"

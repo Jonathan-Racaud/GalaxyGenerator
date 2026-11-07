@@ -7,30 +7,83 @@ using static RaylibBeef.Rlgl;
 
 using GalaxyGenerator.Core;
 
-namespace GalaxyGenerator;
+namespace GalaxyGenerator.App;
 
-class GalaxyRenderer
+class App
 {
-	public void Render(List<Star> stars)
+	public delegate void() Update ~ delete _;
+	public delegate void() Render ~ delete _;
+
+	public Camera3D Camera;
+
+	public this(StringView title)
 	{
-		for (let star in stars)
+		InitWindow(1024, 768, title.Ptr);
+		SetTargetFPS(60);
+
+		Camera = Camera3D(
+			.(2000,0,500), // Position
+			.(0,0,0), // Target
+			.(0,0,1), // Up
+			45.0f, // FOV
+			CameraProjection.CAMERA_PERSPECTIVE
+		);
+	}
+
+	public ~this()
+	{
+		CloseWindow();
+	}
+
+	public void Run()
+	{
+		while (!WindowShouldClose())
 		{
-			DrawSphere(
-				.(star.Position.X, star.Position.Y, star.Position.Z),
-				2.f,
-				GetColor(star.Color.Hex)
-			);
+			Update();
+
+			BeginDrawing();
+			ClearBackground(BLACK);
+			BeginMode3D(Camera);
+			rlSetClipPlanes(0.1f, 5000.f);
+
+			Render();
+
+			EndMode3D();
+			EndDrawing();
 		}
 	}
 }
 
 class Program
 {
+	private static List<Star> stars = null;
+
 	public static int Main(String[] args)
 	{
-		InitWindow(1024, 768, scope $"Galaxy Generator");
-		SetTargetFPS(60);
+		let app = scope App("Galaxy Generator");
 
+		app.Update = new () => {
+			UpdateCamera(&app.Camera, .CAMERA_ORBITAL);
+
+			if (IsKeyPressed(.KEY_R))
+			{
+				Generate(.Ring);
+			}
+			else if (IsKeyPressed(.KEY_S))
+			{
+				Generate(.Spiral);
+			}
+		};
+
+		app.Render = new => Render;
+
+		app.Run();
+
+		return 0;
+	}
+
+	protected static void Generate(GalaxyType type)
+	{
 		let core = GalaxyCenterConfig(
 			1000,
 			.Spheric(deviation: 50)
@@ -64,86 +117,47 @@ class Program
 			Height: 12
 		);
 
-		let ringGalaxyGenerator = scope RingGalaxyGenerator(core, center, ring);
-		let spiralGalaxyGenerator = scope SpiralGalaxyGenerator(core, center, arm);
+		GalaxyGenerator generator;
 
-		List<Star> ringStars = null;
-		defer { delete ringStars; }
-
-		List<Star> spiralStars = null;
-		defer { delete spiralStars; }
-
-		ringGalaxyGenerator.Generate(out ringStars);
-		spiralGalaxyGenerator.Generate(out spiralStars);
-
-		let galaxyRenderer = scope GalaxyRenderer();
-
-		var selectedStars = GalaxyType.Ring(ringStars);
-
-		var camera = Camera3D(
-			.(2000,0,500), // Position
-			.(0,0,0), // Target
-			.(0,0,1), // Up
-			45.0f, // FOV
-			CameraProjection.CAMERA_PERSPECTIVE
-		);
-
-		while (!WindowShouldClose())
+		switch (type)
 		{
-			UpdateCamera(&camera, .CAMERA_ORBITAL);
+		case .Ring:
+			generator = new RingGalaxyGenerator(core, center, ring);
+		case .Spiral:
+			generator = new SpiralGalaxyGenerator(core, center, arm);
+		}
+		defer { delete generator; }
 
-			if (IsKeyPressed(.KEY_R))
-			{
-				selectedStars = .Ring(ringStars);
-			}
-			else if (IsKeyPressed(.KEY_S))
-			{
-				selectedStars = .Spiral(spiralStars);
-			}
+		SafeDeleteAndNullify!(stars);
 
-			if (IsKeyPressed(.KEY_G))
-			{
-				DeleteAndNullify!(ringStars);
-				DeleteAndNullify!(spiralStars);
+		generator.Generate(out stars);
+	}
 
-				ringGalaxyGenerator.Generate(out ringStars);
-				spiralGalaxyGenerator.Generate(out spiralStars);
-
-				if (selectedStars case .Ring)
-				{
-					selectedStars = .Ring(ringStars);
-				}
-				else
-				{
-					selectedStars = .Spiral(spiralStars);
-				}
-			}
-
-			BeginDrawing();
-			ClearBackground(BLACK);
-
-			rlSetClipPlanes(0.1f, 5000.f);
-			BeginMode3D(camera);
-
-			var starCount = 0;
-			switch (selectedStars)
-			{
-			case .Ring(let stars):
-				galaxyRenderer.Render(stars);
-				starCount = stars.Count;
-			case .Spiral(let stars):
-				galaxyRenderer.Render(stars);
-				starCount = stars.Count;
-			}
-
-			EndMode3D();
-
-			DrawText(scope $"Stars: {starCount}", 20, 20, 32, RAYWHITE);
-
-			EndDrawing();
+	protected static void Render()
+	{
+		if (stars == null)
+		{
+			return;
 		}
 
-		CloseWindow();
-		return 0;
+		DrawText(scope $"Stars: {stars.Count}", 20, 20, 32, RAYWHITE);
+
+		for (let star in stars)
+		{
+			DrawSphere(
+				.(star.Position.X, star.Position.Y, star.Position.Z),
+				2.f,
+				GetColor(star.Color.Hex)
+			);
+		}
+	}
+
+	protected static mixin SafeDeleteAndNullify(var container)
+	{
+		if (container != null)
+		{
+			delete container;
+			container = null;
+		}
 	}
 }

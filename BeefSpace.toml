@@ -1,0 +1,15 @@
+FileVersion = 1
+
+[Workspace]
+StartupProject = "GalaxyGenerator.App"
+
+[Projects]
+"GalaxyGenerator.App" = {Path = "GalaxyGenerator.App"}
+"GalaxyGenerator.Core" = {Path = "GalaxyGenerator.Core"}
+raylib-beef = {Path = "GalaxyGenerator.App/libs/raylib-beef/raylib-beef"}
+
+[Configs.Test.Win32]
+ConfigSelections = {corlib = {Config = "Debug"}}
+
+[Configs.Test.Win64]
+ConfigSelections = {corlib = {Config = "Debug"}}

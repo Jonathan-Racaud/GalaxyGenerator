@@ -15,8 +15,8 @@ enum GaussianGenerator
 
 enum GalaxyType
 {
-	case Ring(List<Star> stars);
-	case Spiral(List<Star> stars);
+	Ring,
+	Spiral
 }
 
 struct GalaxyCenterConfig: this(
