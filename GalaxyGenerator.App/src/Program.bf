@@ -56,7 +56,7 @@ class App
 
 class Program
 {
-	private static List<Star> stars = null;
+	private static List<Star> stars = null ~ delete _;
 
 	public static int Main(String[] args)
 	{
