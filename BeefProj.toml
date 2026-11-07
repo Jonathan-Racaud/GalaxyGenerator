@@ -7,3 +7,4 @@ StartupObject = "GalaxyGenerator.Program"
 [Dependencies]
 corlib = "*"
 raylib-beef = "*"
+"GalaxyGenerator.Core" = "*"

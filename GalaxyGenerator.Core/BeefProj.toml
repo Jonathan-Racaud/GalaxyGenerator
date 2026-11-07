@@ -1,0 +1,6 @@
+FileVersion = 1
+
+[Project]
+Name = "GalaxyGenerator.Core"
+TargetType = "BeefLib"
+StartupObject = "GalaxyGenerator.Core.Program"

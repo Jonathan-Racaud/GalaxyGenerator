@@ -6,6 +6,7 @@ StartupProject = "GalaxyGenerator"
 [Projects]
 GalaxyGenerator = {Path = "."}
 raylib-beef = {Path = "libs/raylib-beef/raylib-beef"}
+"GalaxyGenerator.Core" = {Path = "GalaxyGenerator.Core"}
 
 [Configs.Debug.Linux64]
 AllowHotSwapping = true

@@ -1,14 +1,14 @@
 FileVersion = 1
 LastConfig = "Debug"
-LastPlatform = "Linux64"
-RecentFilesList = ["src/Program.bf", "/home/vendinois/.local/share/beef/BeefLibs/corlib/src/Random.bf"]
+LastPlatform = "Win64"
+RecentFilesList = ["src\\Program.bf", "GalaxyGenerator.Core\\src\\GalaxyGenerator.bf", "libs\\raylib-beef\\raylib-beef\\src\\Raylib.bf", "GalaxyGenerator.Core\\src\\GalaxyConfiguration.bf", "C:\\home\\vendinois\\.local\\share\\beef\\BeefLibs\\corlib\\src\\Random.bf"]
 
 [MainWindow]
-X = 0
-Y = 0
-Width = 1520
-Height = 1321
-ShowKind = "ShowNormal"
+X = 610
+Y = 139
+Width = 1577
+Height = 1183
+ShowKind = "ShowMaximized"
 
 [MainDockingFrame]
 Type = "DockingFrame"
@@ -29,10 +29,11 @@ Type = "TabbedView"
 [[MainDockingFrame.DockedWidgets.DockedWidgets.Tabs]]
 Active = true
 TabLabel = "Workspace"
-TabWidth = 118.0
+TabWidth = 115.0
 TabIsPinned = false
 Type = "ProjectPanel"
 ScrollPos = 0.0
+OpenFolders = ["PI:GalaxyGenerator", "PI:GalaxyGenerator.Core"]
 
 [[MainDockingFrame.DockedWidgets.DockedWidgets]]
 IsFillWidget = true
@@ -44,14 +45,32 @@ DefaultDocumentsTabbedView = true
 Type = "TabbedView"
 
 [[MainDockingFrame.DockedWidgets.DockedWidgets.Tabs]]
-Active = true
-TabLabel = "Program.bf"
-TabWidth = 98.0
+TabLabel = "GalaxyConfiguration.bf"
+TabWidth = 172.0
 TabIsPinned = false
 Type = "SourceViewPanel"
-FilePath = "src/Program.bf"
-CursorPos = 9115
-VertPos = 5203.125
+FilePath = "GalaxyGenerator.Core\\src\\GalaxyConfiguration.bf"
+CursorPos = 60
+ProjectName = "GalaxyGenerator.Core"
+
+[[MainDockingFrame.DockedWidgets.DockedWidgets.Tabs]]
+TabLabel = "GalaxyGenerator.bf"
+TabWidth = 151.0
+TabIsPinned = false
+Type = "SourceViewPanel"
+FilePath = "GalaxyGenerator.Core\\src\\GalaxyGenerator.bf"
+CursorPos = 6747
+VertPos = 1484.0
+ProjectName = "GalaxyGenerator.Core"
+
+[[MainDockingFrame.DockedWidgets.DockedWidgets.Tabs]]
+Active = true
+TabLabel = "Program.bf"
+TabWidth = 96.0
+TabIsPinned = false
+Type = "SourceViewPanel"
+FilePath = "src\\Program.bf"
+CursorPos = 473
 ProjectName = "GalaxyGenerator"
 
 [[MainDockingFrame.DockedWidgets]]
@@ -68,7 +87,7 @@ Type = "TabbedView"
 
 [[MainDockingFrame.DockedWidgets.DockedWidgets.Tabs]]
 TabLabel = "Memory"
-TabWidth = 100.0
+TabWidth = 99.0
 TabIsPinned = false
 Type = "MemoryPanel"
 AutoResize = "Auto_Mul8"
@@ -76,7 +95,7 @@ RequestedWidth = 300.0
 
 [[MainDockingFrame.DockedWidgets.DockedWidgets.Tabs]]
 TabLabel = "Watch"
-TabWidth = 87.0
+TabWidth = 86.0
 TabIsPinned = false
 Type = "WatchPanel"
 Columns = [{Width = 200.0}, {Width = 200.0}, {Width = 200.0}]
@@ -84,7 +103,7 @@ Columns = [{Width = 200.0}, {Width = 200.0}, {Width = 200.0}]
 [[MainDockingFrame.DockedWidgets.DockedWidgets.Tabs]]
 Active = true
 TabLabel = "Auto"
-TabWidth = 78.0
+TabWidth = 77.0
 TabIsPinned = false
 Type = "AutoWatchPanel"
 Columns = [{Width = 200.0}, {Width = 200.0}, {Width = 200.0}]
@@ -97,26 +116,26 @@ Type = "TabbedView"
 
 [[MainDockingFrame.DockedWidgets.DockedWidgets.Tabs]]
 TabLabel = "Threads"
-TabWidth = 102.0
+TabWidth = 97.0
 TabIsPinned = false
 Type = "ThreadPanel"
 
 [[MainDockingFrame.DockedWidgets.DockedWidgets.Tabs]]
 TabLabel = "Call Stack"
-TabWidth = 106.0
+TabWidth = 105.0
 TabIsPinned = false
 Type = "CallStackPanel"
 
 [[MainDockingFrame.DockedWidgets.DockedWidgets.Tabs]]
 TabLabel = "Immediate"
-TabWidth = 115.0
+TabWidth = 111.0
 TabIsPinned = false
 Type = "ImmediatePanel"
 
 [[MainDockingFrame.DockedWidgets.DockedWidgets.Tabs]]
 Active = true
 TabLabel = "Output"
-TabWidth = 92.0
+TabWidth = 90.0
 TabIsPinned = false
 Type = "OutputPanel"
 
